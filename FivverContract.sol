@@ -24,6 +24,7 @@ contract Aliens is ERC721, Ownable, ReentrancyGuard  {
     constructor() ERC721('Aliens', 'ALN') {}
 
 //* Minting Functions
+// ? Do I need the nonReentrant keyword?
     function mint(uint256 num) public payable nonReentrant {
         require(num > 0, "You must mint at least 1 NFT");
         require (isMintEnabled, 'Minting not enabled');
@@ -31,6 +32,7 @@ contract Aliens is ERC721, Ownable, ReentrancyGuard  {
         require(msg.value == num * cost, 'Wrong ether value');
         require(numInWallet[msg.sender] + num <= maxMintPerWallet, 'Exceeds max per wallet');
 
+// ? is this for loop running and tracking the total supply, and incrementing the tokenId correctly?
         for(uint256 i = 0; i < num; i++) {
             totalSupply++;
             uint256 tokenId = totalSupply;
@@ -81,7 +83,7 @@ contract Aliens is ERC721, Ownable, ReentrancyGuard  {
         require(success, 'Withdrawal of funds failed');
     }
 
-// ? is this function safe?
+// ? is this withdraw function safe, do is it smart to have it?
 // Enable non-eth withdrawals
     function withdrawTokens(IERC20 token) external onlyOwner {
     uint256 balance = token.balanceOf(address(this));
